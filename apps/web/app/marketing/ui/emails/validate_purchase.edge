@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>
+    </title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        background-color: #f9f9f9;
+        -webkit-text-size-adjust: 100%;
+        -ms-text-size-adjust: 100%;
+      }
+
+      .email-wrapper {
+        max-width: 600px;
+        margin: 0 auto;
+        background-color: #f9f9f9;
+      }
+
+      .email-header {
+        border-bottom: 5px solid #333957;
+        padding: 20px 0;
+        text-align: center;
+      }
+
+      .email-card {
+        background: #fff;
+        border: 1px solid #dddddd;
+        padding: 20px;
+        text-align: center;
+      }
+
+      .title {
+        font-family: 'Helvetica Neue', Arial, sans-serif;
+        font-size: 38px;
+        font-weight: bold;
+        line-height: 1;
+        color: #555;
+        padding: 10px 25px 40px;
+        text-align: center;
+      }
+
+      .subtitle {
+        font-family: 'Helvetica Neue', Arial, sans-serif;
+        font-size: 18px;
+        line-height: 1;
+        color: #555;
+        padding: 10px 25px 40px;
+        text-align: center;
+      }
+
+      .button-wrapper {
+        padding: 30px 25px 50px;
+      }
+
+      .button-wrapper a {
+        display: inline-block;
+        background: #2f67f6;
+        color: #ffffff;
+        font-family: 'Helvetica Neue', Arial, sans-serif;
+        font-size: 15px;
+        padding: 15px 25px;
+        border-radius: 3px;
+        text-decoration: none;
+      }
+
+      .message {
+        font-family: 'Helvetica Neue', Arial, sans-serif;
+        font-size: 16px;
+        line-height: 20px;
+        color: #7f8fa4;
+        padding: 10px 25px 40px;
+        text-align: center;
+      }
+
+      .email-footer {
+        padding: 20px 0;
+        text-align: center;
+      }
+
+      .email-footer .footer-text {
+        font-family: 'Helvetica Neue', Arial, sans-serif;
+        font-size: 12px;
+        font-weight: 300;
+        color: #575757;
+        text-align: center;
+      }
+
+      .stripeId {
+        font-family: 'Helvetica Neue', Arial, sans-serif;
+        font-size: 16px;
+        line-height: 20px;
+        color: #7f8fa4;
+        padding: 10px 25px 40px;
+        text-align: center;
+      }
+
+      @media only screen and (max-width: 480px) {
+        .email-wrapper {
+          width: 100% !important;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="email-wrapper">
+      <div class="email-header">
+      </div>
+
+      <div class="email-card">
+        <div class="title">
+          Félicitations !
+        </div>
+        <div class="subtitle">
+          Merci pour votre achat.
+        </div>
+        <div class="message">
+          Vous recevez ce mail car vous avez acheté un produit sur notre site.
+          <p>
+                    Voici votre code Stripe (au cas il y ait un soucis):
+                     <div class="stripeId">
+                    {{ order.stripeCheckoutId }}
+                </div>
+</p>
+
+<div>
+          Vous recevrez des emails pour le suivi de votre colis.
+          Nous expedierons votre commande dans les plus brefs délais.
+
+          Merci pour votre confiance.
+</div>
+
+
+          Vos achats:
+
+          <ul>
+            @each (purchase in items)
+              <li>{{ purchase.product.name }} x{{ purchase.quantity }}</li>
+            @endeach
+        </div>
+
+        <h1>
+        L'addresse de livraison est la suivante:
+</h1>
+
+        <ul>
+
+
+          @if(order.shippingData.locker)
+            <p>Id du point relais: {{ order.shippingData.locker }}</p>
+          @else
+                <p>{{ order.shippingData.address }} {{ order.shippingData.complement }}</p>
+                <p>{{ order.shippingData.city }}, {{ order.shippingData.state }} {{ order.shippingData.zip }}</p>
+                <p>{{ order.shippingData.country }}</p>
+          @endif
+      </div>
+
+      <div class="email-footer">
+        <div class="footer-text">
+          <a href="">APP.fr</a>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
