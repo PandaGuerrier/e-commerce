@@ -1,5 +1,6 @@
 import { DateTime } from 'luxon'
 import { BaseModel, column } from '@adonisjs/lucid/orm'
+import { OrderItem } from '#marketing/models/order'
 
 export default class Cart extends BaseModel {
   @column({ isPrimary: true })
@@ -7,7 +8,7 @@ export default class Cart extends BaseModel {
 
   @column()
   declare items: {
-    objects: CartItem[]
+    objects: OrderItem[]
   }
 
   getTotalPrice() {
@@ -19,10 +20,4 @@ export default class Cart extends BaseModel {
 
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   declare updatedAt: DateTime
-}
-
-export interface CartItem {
-  productId: number
-  price: number
-  quantity: number
 }

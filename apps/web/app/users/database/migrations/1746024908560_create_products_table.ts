@@ -14,7 +14,7 @@ export default class extends BaseSchema {
       table.json('images').nullable()
       table.string('price').notNullable()
       table.string('price_stripe_id').nullable()
-      table.integer('stock').notNullable()
+      table.json('stock').nullable()
       table.boolean('active').defaultTo(true).notNullable()
 
       table.timestamp('created_at')

@@ -4,7 +4,7 @@ export const createAddItemCartValidator = vine.compile(
   vine.object({
     productId: vine.number().positive(),
     quantity: vine.number().positive(),
-    price: vine.number().positive(),
+    size: vine.string(),
   })
 )
 

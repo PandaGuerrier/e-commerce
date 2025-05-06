@@ -62,6 +62,7 @@ export default class Order extends BaseModel {
 export interface OrderItem {
   productId: number
   quantity: number
+  size: string
   price: number
   stripePriceId: string
 }

@@ -6,6 +6,7 @@ import { useState } from 'react'
 import { useForm } from '@inertiajs/react'
 import { toast } from '@workspace/ui/hooks/use-toast'
 import { Toaster } from '@workspace/ui/components/sonner'
+import { ProductStockInterface } from '#marketing/models/product'
 
 interface ProductPageProps {
   product: ProductDto
@@ -13,11 +14,12 @@ interface ProductPageProps {
 
 export default function ProductPage({ product }: ProductPageProps) {
   const [quantity, setQuantity] = useState(1)
+  const [size, setSize] = useState(product.stock[0] as ProductStockInterface)
 
-  const { put } = useForm({
+  const { put, setData } = useForm({
     productId: product.id,
     quantity,
-    price: product.price,
+    size: null as unknown as string,
   })
 
   function addToCart() {
@@ -29,13 +31,16 @@ export default function ProductPage({ product }: ProductPageProps) {
       return
     }
 
-    if (quantity > product.stock!) {
+    if (quantity > size.stock) {
       toast.error('Erreur', {
         richColors: true,
-        description: `La quantité demandée (${quantity}) est supérieure à la quantité en stock (${product.stock}).`,
+        description: `La quantité demandée (${quantity}) est supérieure à la quantité en stock (${size.stock}).`,
       })
       return
     }
+
+    console.log('size', size)
+    setData('size', size.size)
 
 
     put('/cart/add', {
@@ -81,6 +86,23 @@ export default function ProductPage({ product }: ProductPageProps) {
               className="mt-8 w-full max-w-md rounded-lg shadow-lg"
             />
             <p className="mt-4 text-2xl font-bold">${product.price / 100}</p>
+            <div>
+              {
+                product.stock.map((stock => (
+                  <div key={stock.size} className={'flex space-x-4 mt-4 '}>
+                    <Button
+                      id="size"
+                      onClick={() => setSize(stock)}
+                      className="border rounded-md p-2"
+                      variant={size.size == stock.size ? 'default' : 'outline'}
+                    >
+                      {stock.size}
+                    </Button>
+                  </div>
+                )))
+              }
+            </div>
+
 
             <div className={'flex space-x-4'}>
               <Toaster />

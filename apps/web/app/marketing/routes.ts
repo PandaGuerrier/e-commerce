@@ -22,7 +22,8 @@ router.group(() => {
 router.group(() => {
   router.put('/add', [CartController, 'addItem'])
   router.delete('/remove/:productId', [CartController, 'removeItem'])
-  router.get('/', [CartController, 'show'])
+  router.get('/', [CartController, 'show']).as('cart.show')
+  router.get('/reset', [CartController, 'clearCart'])
 }).prefix('/cart').middleware(middleware.auth())
 
 router.group(() => {

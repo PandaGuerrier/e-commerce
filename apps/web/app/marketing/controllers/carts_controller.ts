@@ -34,9 +34,13 @@ export default class CartsController {
     const user = auth.user!
 
     const cart = await user.related('cart').query().firstOrFail()
+    const product = await Product.findOrFail(data.productId)
 
     // check if the item already exists in the cart
-    const existingItem = cart.items.objects.find(item => item.productId === data.productId)
+    const existingItem = cart.items.objects.find(item => item.productId === data.productId && item.size === data.size)
+
+    console.log('existingItem', existingItem)
+    console.log('size', data.size)
 
     if (existingItem) {
       existingItem.quantity += data.quantity
@@ -44,7 +48,9 @@ export default class CartsController {
       cart.items.objects.push({
         productId: data.productId,
         quantity: data.quantity,
-        price: data.price,
+        price: product.price,
+        stripePriceId: product.priceStripeId!,
+        size: data.size,
       })
     }
 
@@ -73,7 +79,6 @@ export default class CartsController {
 
   async clearCart({ response, auth }: HttpContext) {
     const user = auth.user!
-
     const cart = await user.related('cart').query().firstOrFail()
 
     cart.items.objects = []

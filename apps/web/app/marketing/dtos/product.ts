@@ -1,5 +1,5 @@
 import { BaseModelDto } from '@adocasts.com/dto/base'
-import Product from '#marketing/models/product'
+import Product, { ProductStockInterface } from '#marketing/models/product'
 
 export default class ProductDto extends BaseModelDto {
   declare id: number
@@ -8,7 +8,7 @@ export default class ProductDto extends BaseModelDto {
   declare price: number
   declare stripeProductId: string | null
   declare imageUrl: string | null
-  declare stock: number | null
+  declare stock: ProductStockInterface[]
   declare createdAt: string
   declare updatedAt: string
 

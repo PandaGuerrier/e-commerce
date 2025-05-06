@@ -21,8 +21,17 @@ export default class Product extends BaseModel {
   @column()
   declare priceStripeId: string | null | undefined
 
-  @column()
-  declare stock: number
+  @column({
+    prepare: (value: any) => {
+      return {
+        objects: value,
+      }
+    },
+    consume: (value: any) => {
+      return value.objects
+    }
+  })
+  declare stock: ProductStockInterface[]
 
   @column()
   declare stripeProductId: string | null
@@ -82,4 +91,9 @@ export default class Product extends BaseModel {
 
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   declare updatedAt: DateTime
+}
+
+export interface ProductStockInterface {
+  stock: number,
+  size: string,
 }

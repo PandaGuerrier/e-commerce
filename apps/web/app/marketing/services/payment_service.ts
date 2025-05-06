@@ -1,6 +1,5 @@
 import stripe from '@vbusatta/adonis-stripe/services/main'
 import { inject } from '@adonisjs/core'
-import Product from '#marketing/models/product'
 import User from '#users/models/user'
 import { OrderItem } from '#marketing/models/order'
 
@@ -21,8 +20,7 @@ export default class PaymentService {
     console.log('PaymentService initialized')
   }
 
-  async createCheckoutSession({ items, success_url, cancel_url, user, charges, shippingInfo }: {items: Product[], success_url: string, cancel_url: string, charges: number, user: User, shippingInfo: ShippingInfo }) {
-    const itemsWithQuantity = this.getItemsWithQuantity(items)
+  async createCheckoutSession({ items, success_url, cancel_url, user, charges, shippingInfo }: {items: OrderItem[], success_url: string, cancel_url: string, charges: number, user: User, shippingInfo: ShippingInfo }) {
     const order = await user.related('orders').create({
       shippingStatus: 'pending',
       shippingData: {
@@ -36,13 +34,13 @@ export default class PaymentService {
       },
       shippingMethod: shippingInfo.shippingMethod,
       items: {
-        objects: itemsWithQuantity,
+        objects: items,
       },
       taxes: charges,
       userId: user.id,
     })
 
-    const lineItems = itemsWithQuantity.map((item) => ({
+    const lineItems = items.map((item) => ({
       price: item.stripePriceId!,
       quantity: item.quantity,
     }))
@@ -80,24 +78,5 @@ export default class PaymentService {
     console.log('session', session)
 
     return session
-  }
-
-  private getItemsWithQuantity(items: Product[]): OrderItem[] {
-    const itemMap: Record<number, OrderItem> = {}
-
-    items.forEach((item) => {
-      if (itemMap[item.id]) {
-        itemMap[item.id].quantity += 1
-      } else {
-        itemMap[item.id] = {
-          productId: item.id,
-          quantity: 1,
-          stripePriceId: item.priceStripeId!,
-          ...item,
-        }
-      }
-    })
-
-    return Object.values(itemMap)
   }
 }
