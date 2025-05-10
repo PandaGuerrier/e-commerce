@@ -25,10 +25,13 @@
     "@frontboi/mondial-relay": "^1.2.49",
     "@radix-ui/react-accordion": "^1.2.8",
     "@sendcloud/checkout-plugin-ui": "^2.4.3",
+    "@tabler/icons": "^3.31.0",
+    "@tabler/icons-react": "^3.31.0",
     "@tapni/sendcloud": "^1.0.2",
     "create-email": "^1.2.0",
     "react-email": "^4.0.11",
     "shippo": "^2.15.0",
+    "ts-node-maintained": "^10.9.5",
     "web": "^0.0.2"
   }
 }

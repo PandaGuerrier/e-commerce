@@ -1,7 +1,7 @@
 import HeaderSection from '#home/ui/components/navbar'
 import ProductDto from '#marketing/dtos/product'
 import { Button } from '@workspace/ui/components/button'
-import { ShoppingCart } from 'lucide-react'
+import { ClockFading, ShoppingCart } from 'lucide-react'
 import { useState } from 'react'
 import { useForm } from '@inertiajs/react'
 import { toast } from '@workspace/ui/hooks/use-toast'
@@ -19,7 +19,7 @@ export default function ProductPage({ product }: ProductPageProps) {
   const { put, setData } = useForm({
     productId: product.id,
     quantity,
-    size: null as unknown as string,
+    size: product.stock[0].size,
   })
 
   function addToCart() {
@@ -42,7 +42,6 @@ export default function ProductPage({ product }: ProductPageProps) {
     console.log('size', size)
     setData('size', size.size)
 
-
     put('/cart/add', {
       preserveScroll: true,
       onSuccess: () => {
@@ -62,10 +61,13 @@ export default function ProductPage({ product }: ProductPageProps) {
           description: `${product.name} a été ajouté à votre panier.`,
         })
       },
-      onError: () => {
+      onError: (e) => {
+        console.error('Erreur', {
+          e,
+        })
         toast.error('Erreur', {
           richColors: true,
-          description: 'Une erreur est survenue lors de l\'ajout au panier.',
+          description: "Une erreur est survenue lors de l'ajout au panier.",
         })
       },
     })
@@ -76,19 +78,27 @@ export default function ProductPage({ product }: ProductPageProps) {
       <div className="flex-1 mx-auto max-w-7xl px-4">
         <HeaderSection />
 
-        <div className="flex flex-col space-y-12 pt-16 min-h-screen">
-          <div className="flex flex-col items-center justify-center">
-            <h1 className="text-4xl font-bold">{product.name}</h1>
-            <p className="mt-4 text-lg text-gray-600">{product.description}</p>
+        <div className="flex min-h-screen pt-16 space-x-5">
+          <div className={''}>
             <img
-              src={product.imageUrl ?? ''}
+              src={
+                product.imageUrl ??
+                'https://images.unsplash.com/photo-1746648177616-eed4cc1a1213?q=80&w=1976&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
+              }
               alt={product.name}
-              className="mt-8 w-full max-w-md rounded-lg shadow-lg"
+              className="max-w-md rounded-lg shadow-lg"
             />
-            <p className="mt-4 text-2xl font-bold">${product.price / 100}</p>
+          </div>
+          <div className="flex flex-col w-1/2">
+            <div className={"mb-5"}>
+              <h1 className="text-xl font-bold">{product.name.toUpperCase()}</h1>
+              <p className="text-md">€{product.price / 100}</p>
+            </div>
+
             <div>
-              {
-                product.stock.map((stock => (
+              <p>Taille:</p>
+              <div className={'flex space-x-3'}>
+                {product.stock.map((stock) => (
                   <div key={stock.size} className={'flex space-x-4 mt-4 '}>
                     <Button
                       id="size"
@@ -99,12 +109,11 @@ export default function ProductPage({ product }: ProductPageProps) {
                       {stock.size}
                     </Button>
                   </div>
-                )))
-              }
+                ))}
+              </div>
             </div>
 
-
-            <div className={'flex space-x-4'}>
+            <div className={'w-full space-y-4'}>
               <Toaster />
 
               <input
@@ -113,13 +122,42 @@ export default function ProductPage({ product }: ProductPageProps) {
                 onChange={(e) => setQuantity(Number(e.target.value))}
                 className="w-16 p-2 border rounded-md"
                 min={1}
-                />
-              <Button className={"cursor-pointer"} onClick={addToCart}>
-                <ShoppingCart size={8} /> Ajouter au panier
-              </Button>
-              <a className={"cursor-pointer"} href={'/stripe/products/checkout/' + product.id}>
-                <Button className={"cursor-pointer"} variant={'ghost'}>Acheter maintenant</Button>
-              </a>
+              />
+              <div className={'w-full space-y-5'}>
+                <Button className={'w-full cursor-pointer'} onClick={addToCart}>
+                  <ShoppingCart size={8} /> Ajouter au panier
+                </Button>
+                <a className={'cursor-pointer'} href={'/stripe/products/checkout/' + product.id}>
+                  <Button className={'w-full cursor-pointer'} variant={'outline'}>
+                    Acheter maintenant
+                  </Button>
+                </a>
+              </div>
+            </div>
+            <div className={"px-5 py-4 bg-neutral-200 rounded-md mt-14"}>
+              <p className={"flex space-x-4"}>
+                <div className={"bg-neutral-300 p-4 rounded-md"}>
+                  <ClockFading />
+                </div>
+                <div className={"items-center w-full"}>
+                  <p>
+                    Livré le : {new Date(Date.now() + 4 * 24 * 60 * 60 * 1000).toLocaleDateString('fr-FR', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric',
+                  })}
+                  </p>
+                  <p className={"text-xs"}>
+                    Livré sous {4} jours en moyenne
+                  </p>
+                </div>
+              </p>
+            </div>
+            <div>
+              <h2 className={"text-lg font-bold mt-5"}>Description</h2>
+              <p className={"text-xs text-neutral-500"}>
+                {product.description}
+              </p>
             </div>
           </div>
         </div>
