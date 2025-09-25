@@ -14,6 +14,7 @@ export function ProductCart({ product, quantity, size }: ProductCartProps) {
   const [actQantity, setActQuantity] = useState(quantity)
 
   const handleQuantityChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    // @ts-ignore
     const value = parseInt(e.target.value)
     if (value <= stockQuantity && value >= 0) {
       setActQuantity(value)
