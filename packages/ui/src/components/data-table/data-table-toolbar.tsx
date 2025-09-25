@@ -1,7 +1,7 @@
 import { Table } from "@tanstack/react-table";
 import { X } from "lucide-react";
 
-import { Button } from "@workspace/ui/components/button";
+import { Button } from "#ui/components/button";
 
 interface DataTableToolbarProps<TData> {
   table: Table<TData>;

@@ -1,8 +1,8 @@
 import * as React from "react";
 import { EyeClosed, EyeIcon } from "lucide-react";
-import { cn } from "@workspace/ui/lib/utils";
+import { cn } from "#ui/lib/utils";
 
-import { Button } from "@workspace/ui/components/button";
+import { Button } from "#ui/components/button";
 
 type PasswordInputProps = Omit<
   React.InputHTMLAttributes<HTMLInputElement>,
